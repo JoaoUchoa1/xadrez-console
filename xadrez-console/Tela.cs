@@ -1,5 +1,6 @@
 ﻿using tabuleiro;
 using System;
+using xadrez;
 namespace xadrez_console
 {
     class Tela
@@ -30,7 +31,7 @@ namespace xadrez_console
         {
             if (peca.cor == Cor.Branca)
             {
-                Console.WriteLine(peca);
+                Console.Write(peca);
             }
             else 
             {
@@ -40,6 +41,14 @@ namespace xadrez_console
                 Console.ForegroundColor = aux;
 
             }
+        }
+
+        public static PosicaoXadrez lerPosicaoXadrez() 
+        {
+            string s = Console.ReadLine();
+            char coluna = s[0];
+            int linha = int.Parse(s[1] + "");
+            return new PosicaoXadrez(coluna, linha);
         }
     }
 }
