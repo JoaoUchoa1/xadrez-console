@@ -66,6 +66,5 @@
                 throw new TabuleiroException("Posicao valida!");
             }
         }
-
     }
 }
