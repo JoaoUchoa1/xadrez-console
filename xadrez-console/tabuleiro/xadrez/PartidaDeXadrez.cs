@@ -5,19 +5,63 @@ namespace xadrez
     {
 
         public Tabuleiro tab { get; private set; }
-        private int turno;
-        private Cor jogadorAtual;
+        public int turno { get; private set; }
+        public Cor jogadorAtual { get; private set; }
         public bool terminado { get; private set; }
 
-        public PartidaDeXadrez() 
+        public PartidaDeXadrez()
         {
-            tab = new Tabuleiro(8,8);
+            tab = new Tabuleiro(8, 8);
             turno = 1;
             jogadorAtual = Cor.Branca;
             colocarPecas();
         }
 
-        public void executaMovimento(Posicao origem, Posicao destino) 
+        public void realizaJogada(Posicao origem, Posicao destino)
+        {
+            executaMovimento(origem, destino);
+            turno++;
+            mudaJogador();
+        }
+
+        public void validaPosicaoOrigem(Posicao pos)
+        {
+            if (tab.peca(pos) == null) 
+            {
+                throw new TabuleiroException("Não existe peça na posicai escolhida.");
+            }
+            if (jogadorAtual != tab.peca(pos).cor) 
+            {
+                throw new TabuleiroException("a Peca de origem escolhida não é sua! ");
+            }
+            if (!tab.peca(pos).exixteMovimentosPossiveis()) 
+            {
+                throw new TabuleiroException("Não existe movimento possivel.");
+            }
+        }
+
+        public void validarPosicaoDeDestino(Posicao origem, Posicao destino) 
+        {
+            if (!tab.peca(origem).podeMoverPara(destino)) 
+            {
+                throw new TabuleiroException("Posicao de Destino invalida");
+            }
+        }
+
+        private void mudaJogador()
+        {
+            if (jogadorAtual == Cor.Branca)
+            {
+                jogadorAtual = Cor.Preta;
+            }
+            else
+            {
+                jogadorAtual = Cor.Branca;
+            }
+        }
+
+
+        public void executaMovimento(Posicao origem, Posicao destino)
         {
             Peca p = tab.retirarPeca(origem);
             p.incremetarQtdMovimentos();
@@ -25,7 +69,7 @@ namespace xadrez
             tab.colocarPeca(p, destino);
         }
 
-        private void colocarPecas() 
+        private void colocarPecas()
         {
             tab.colocarPeca(new Torre(tab, Cor.Branca), new PosicaoXadrez('c', 1).toPosicao());
             tab.colocarPeca(new Torre(tab, Cor.Branca), new PosicaoXadrez('c', 2).toPosicao());
